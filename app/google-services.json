@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "803515617697",
+    "project_id": "password-manager-1760b",
+    "storage_bucket": "password-manager-1760b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803515617697:android:01081bdb85e7cab0d8fbe0",
+        "android_client_info": {
+          "package_name": "com.samcore.passwordmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "803515617697-fsp1moccsovkjpgs91rlf6sv76snpqit.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAc8Uev0snrZ1xVqKyvguxoUX2FAiYoeL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "803515617697-fsp1moccsovkjpgs91rlf6sv76snpqit.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
