@@ -121,22 +121,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            addDataToFirebase(user);
-                            appSession.setKeyIsLoggedIn(true);
-                            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            updateUI(null);
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        addDataToFirebase(user);
+                        appSession.setKeyIsLoggedIn(true);
+                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        updateUI(null);
                     }
                 });
     }
@@ -156,12 +153,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .build();
 
         user.sendEmailVerification(actionCodeSettings)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Email sent.");
                     }
                 });
 
@@ -177,11 +171,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // [START send_email_verification]
         final FirebaseUser user = firebaseAuth.getCurrentUser();
         Objects.requireNonNull(user).sendEmailVerification()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // Email sent
-                    }
+                .addOnCompleteListener(this, task -> {
+                    // Email sent
                 });
         // [END send_email_verification]
     }
@@ -258,23 +249,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void signIn(String email, String password) {
         // [START sign_in_with_email]
         firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            updateUI(user);
-                            appSession.setKeyIsLoggedIn(true);
-                            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        updateUI(user);
+                        appSession.setKeyIsLoggedIn(true);
+                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        updateUI(null);
                     }
                 });
         // [END sign_in_with_email]
@@ -282,38 +270,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void createAccount(String email, String password) {
         // [START create_user_with_email]
         firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            addDataToFirebase(user);
-                            startActivity(new Intent(LoginActivity.this,LoginActivity.class));
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            // If sign in fails, display a message to the user.
-                            try {
-                                throw Objects.requireNonNull(task.getException());
-                            } catch (FirebaseAuthWeakPasswordException e) {
-                                // Handle weak password exception
-                                String errorCode = e.getErrorCode();
-                                String errorMessage = e.getMessage();
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        addDataToFirebase(user);
+                        startActivity(new Intent(LoginActivity.this,LoginActivity.class));
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        // If sign in fails, display a message to the user.
+                        try {
+                            throw Objects.requireNonNull(task.getException());
+                        } catch (FirebaseAuthWeakPasswordException e) {
+                            // Handle weak password exception
+                            String errorCode = e.getErrorCode();
+                            String errorMessage = e.getMessage();
 
-                                if (errorCode.equals("ERROR_WEAK_PASSWORD")) {
-                                    // Password is too weak
-                                    Toast.makeText(LoginActivity.this, "Password should be at least 6 characters", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // Other weak password exception, handle accordingly
-                                    Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (Exception e) {
-                                // Handle other exceptions
-                                Toast.makeText(LoginActivity.this, "Authentication failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (errorCode.equals("ERROR_WEAK_PASSWORD")) {
+                                // Password is too weak
+                                Toast.makeText(LoginActivity.this, "Password should be at least 6 characters", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Other weak password exception, handle accordingly
+                                Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                             }
-                            updateUI(null);
+                        } catch (Exception e) {
+                            // Handle other exceptions
+                            Toast.makeText(LoginActivity.this, "Authentication failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                        updateUI(null);
                     }
                 });
         // [END create_user_with_email]

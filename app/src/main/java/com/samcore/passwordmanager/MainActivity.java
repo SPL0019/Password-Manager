@@ -59,21 +59,17 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
         new AlertDialog.Builder(this)
                 .setTitle("Logout")
                 .setMessage("Would you like to logout?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // logout
-                        appSession.setKeyIsLoggedIn(false);
-                        Intent intent=new Intent(MainActivity.this, LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // logout
+                    appSession.setKeyIsLoggedIn(false);
+                    Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // user doesn't want to logout
-                        dialog.dismiss();
-                    }
+                .setNegativeButton("No", (dialog, which) -> {
+                    // user doesn't want to logout
+                    dialog.dismiss();
                 })
                 .show();
     }
