@@ -17,8 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.samcore.passwordmanager.components.AppSession;
 import com.samcore.passwordmanager.R;
 import com.samcore.passwordmanager.model.PasswordModel;
-import com.samcore.passwordmanager.model.PasswordTypeModel;
 
 import java.util.ArrayList;
 import java.util.List;
