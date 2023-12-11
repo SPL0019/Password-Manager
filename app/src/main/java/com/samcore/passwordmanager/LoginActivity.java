@@ -55,11 +55,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     DatabaseReference databaseReference;
     UserModel userModel=new UserModel();
     String name_s="",email_s="",password_S="";
+    AppSession appSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        appSession=new AppSession(getApplicationContext());
 
         findViewById();
 
@@ -127,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             addDataToFirebase(user);
+                            appSession.setKeyIsLoggedIn(true);
                             Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
                         } else {
@@ -263,6 +266,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             updateUI(user);
+                            appSession.setKeyIsLoggedIn(true);
                             startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         } else {
                             // If sign in fails, display a message to the user.
@@ -337,7 +341,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else {
                     databaseReference.child(user.getUid()).setValue(userModel);
                     // after adding this data we are showing toast message.
-                    Toast.makeText(LoginActivity.this, "data added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "SingIn successfully", Toast.LENGTH_SHORT).show();
                 }
 
             }

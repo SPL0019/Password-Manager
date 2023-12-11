@@ -1,9 +1,12 @@
 package com.samcore.passwordmanager;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -17,11 +20,14 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
     HomeFragment homeFragment=new HomeFragment();
     PasswordGeneratorFragment passwordGeneratorFragment=new PasswordGeneratorFragment();
     DocumentUploadFragment documentUploadFragment=new DocumentUploadFragment();
+    AppSession appSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        appSession=new AppSession(getApplicationContext());
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
 
@@ -50,5 +56,25 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
     }
 
     private void logout() {
+        new AlertDialog.Builder(this)
+                .setTitle("Logout")
+                .setMessage("Would you like to logout?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // logout
+                        appSession.setKeyIsLoggedIn(false);
+                        Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // user doesn't want to logout
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 }

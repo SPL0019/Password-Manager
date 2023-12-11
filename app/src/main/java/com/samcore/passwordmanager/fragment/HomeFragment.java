@@ -146,6 +146,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle error
+                Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -172,6 +173,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
     private void addPasswordToFirebase() {
+        String uname=Objects.requireNonNull(username_txt.getEditText()).getText().toString().trim().replaceAll("[^a-zA-Z0-9_]", "_");
         passwordReference.child(firebaseUser.getUid())
                 .child(passwordTypeSpinner.getSelectedItem().toString())
                 .orderByChild("username")
@@ -180,12 +182,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists())
-                    Toast.makeText(getContext(), "This Password already Added...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "This username already Added...", Toast.LENGTH_SHORT).show();
                 else
                 {
                     passwordReference.child(firebaseUser.getUid())
                             .child(passwordTypeSpinner.getSelectedItem().toString())
-                            .child(Objects.requireNonNull(username_txt.getEditText()).getText().toString().trim())
+                            .child(uname)
                             .setValue(passwordModel);
                     Toast.makeText(getContext(), "Password added successfully", Toast.LENGTH_SHORT).show();
                     Objects.requireNonNull(name_txt.getEditText()).setText("");
