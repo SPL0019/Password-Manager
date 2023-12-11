@@ -67,8 +67,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
-        // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance();
+            // Initialize Firebase Auth
+            firebaseAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
         googleSignInClient=GoogleSignIn.getClient(this,googleSignInOptions);
         // instance of our FIrebase database.

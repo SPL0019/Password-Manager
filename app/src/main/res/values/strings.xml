@@ -12,4 +12,17 @@
     <string name="signup">Signup</string>
     <string name="server_client_id">803515617697-fsp1moccsovkjpgs91rlf6sv76snpqit.apps.googleusercontent.com</string>
     <string name="name">Name</string>
+    <string name="logout">Logout</string>
+    <string name="documents">Documents</string>
+    <string name="home">Home</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_password_type">Add Password Type</string>
+    <string name="password_type">Password type</string>
+    <string name="eg_social_media">eg: Social media</string>
+    <string name="add">add</string>
+    <string name="submit">submit</string>
+    <string name="add_password">Add Password</string>
+    <string name="username_or_email">Username or Email</string>
+    <string name="save">Save</string>
 </resources>
