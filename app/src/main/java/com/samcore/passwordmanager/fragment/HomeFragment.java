@@ -24,18 +24,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.samcore.passwordmanager.LoginActivity;
 import com.samcore.passwordmanager.R;
 import com.samcore.passwordmanager.model.PasswordModel;
 import com.samcore.passwordmanager.model.PasswordTypeModel;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    private FirebaseAuth firebaseAuth;
+    FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference,passwordReference;
     FirebaseUser firebaseUser;
