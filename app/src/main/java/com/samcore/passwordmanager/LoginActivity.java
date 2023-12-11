@@ -1,6 +1,6 @@
 package com.samcore.passwordmanager;
 
-import static com.samcore.passwordmanager.ValidationCheck.validateEmail;
+import static com.samcore.passwordmanager.components.ValidationCheck.validateEmail;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.samcore.passwordmanager.components.AppSession;
 import com.samcore.passwordmanager.model.UserModel;
 
 import java.util.Objects;
@@ -50,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private GoogleSignInClient googleSignInClient;
     // Firebase Database.
     FirebaseDatabase firebaseDatabase;
+    FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
     UserModel userModel=new UserModel();
     String name_s="",email_s="",password_S="";
@@ -69,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .build();
             // Initialize Firebase Auth
             firebaseAuth = FirebaseAuth.getInstance();
+            firebaseUser=firebaseAuth.getCurrentUser();
         // [END initialize_auth]
         googleSignInClient=GoogleSignIn.getClient(this,googleSignInOptions);
         // instance of our FIrebase database.
@@ -126,6 +129,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         addDataToFirebase(user);
                         appSession.setKeyIsLoggedIn(true);
+                        appSession.setKeyUsername(Objects.requireNonNull(user).getDisplayName());
+                        appSession.setKeyUid(user.getUid());
                         Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                         startActivity(intent);
                     } else {
@@ -200,6 +205,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (validation())
                 {
                     signIn(email_s,password_S);
+                    getUserInfo();
                 }
             }else {
                 if (validation())
@@ -224,6 +230,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 forgotPassword.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    private void getUserInfo() {
+        databaseReference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String username=snapshot.child("name").getValue(String.class);
+                    String uid=snapshot.child("id").getValue(String.class);
+                    Log.e(TAG, "onDataChange: username"+username );
+                    appSession.setKeyUsername(username);
+                    appSession.setKeyUid(uid);
+                }else
+                    Toast.makeText(LoginActivity.this, "user name not found", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private boolean validation() {

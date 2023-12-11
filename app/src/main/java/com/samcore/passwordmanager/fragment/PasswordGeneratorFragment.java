@@ -44,7 +44,7 @@ public class PasswordGeneratorFragment extends Fragment implements View.OnClickL
     ArrayList<String> passwordTypeList=new ArrayList<>();
     TextInputLayout name_txt,username_txt,password_txt;
     AppCompatButton saveButton;
-    private static final String TAG = "Home fragment";
+    private static final String TAG = "Password fragment";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

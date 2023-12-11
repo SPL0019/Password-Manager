@@ -1,4 +1,4 @@
-package com.samcore.passwordmanager;
+package com.samcore.passwordmanager.components;
 
 import android.app.Application;
 

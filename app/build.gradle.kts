@@ -47,4 +47,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    //Glide
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
 }

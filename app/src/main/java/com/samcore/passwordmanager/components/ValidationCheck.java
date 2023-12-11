@@ -1,4 +1,4 @@
-package com.samcore.passwordmanager;
+package com.samcore.passwordmanager.components;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

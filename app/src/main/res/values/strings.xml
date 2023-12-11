@@ -25,4 +25,6 @@
     <string name="add_password">Add Password</string>
     <string name="username_or_email">Username or Email</string>
     <string name="save">Save</string>
+    <string name="logo">logo</string>
+    <string name="hi">Hi,</string>
 </resources>

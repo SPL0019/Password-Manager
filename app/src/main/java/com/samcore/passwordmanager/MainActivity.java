@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.samcore.passwordmanager.components.AppSession;
 import com.samcore.passwordmanager.fragment.DocumentUploadFragment;
 import com.samcore.passwordmanager.fragment.HomeFragment;
 import com.samcore.passwordmanager.fragment.PasswordGeneratorFragment;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
     PasswordGeneratorFragment passwordGeneratorFragment=new PasswordGeneratorFragment();
     DocumentUploadFragment documentUploadFragment=new DocumentUploadFragment();
     AppSession appSession;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.home);
+        firebaseAuth=FirebaseAuth.getInstance();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
                 .setPositiveButton("Yes", (dialog, which) -> {
                     // logout
                     appSession.setKeyIsLoggedIn(false);
+                    firebaseAuth.signOut();
                     Intent intent=new Intent(MainActivity.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
