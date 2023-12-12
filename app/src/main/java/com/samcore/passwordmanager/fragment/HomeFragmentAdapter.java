@@ -2,20 +2,26 @@ package com.samcore.passwordmanager.fragment;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.textfield.TextInputLayout;
 import com.samcore.passwordmanager.R;
 import com.samcore.passwordmanager.model.PasswordModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapter.ViewHolder>{
     private List<PasswordModel> passwordList;
@@ -41,7 +47,6 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
         holder.name.setText(passwordModel.getName());
         holder.type.setText(passwordModel.getPassword_type());
         holder.email.setText(passwordModel.getUsername());
-        holder.name.setText(passwordModel.getName());
         Glide.with(context)
                 .load(R.drawable.logo)
                 .centerCrop()
@@ -49,6 +54,10 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 .into(holder.imageView);
 
         Log.e("TAG", "onBindViewHolder: passwordModel.getName()"+ passwordModel.getName());
+
+        holder.itemView.setOnClickListener(v->{
+            holder.showPopup(passwordModel.getName(),passwordModel.getPassword_type(),passwordModel.getUsername(),passwordModel.getPassword());
+        });
 
     }
 
@@ -61,12 +70,34 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name,type,email;
         ImageView imageView;
+        AppCompatButton closeButton;
+        TextInputLayout textInputLayoutUsername,textInputLayoutPassword;
+        TextView headerName;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name=itemView.findViewById(R.id.card_password_name);
             type=itemView.findViewById(R.id.card_password_type);
             email=itemView.findViewById(R.id.card_password_email);
             imageView=itemView.findViewById(R.id.card_image);
+
+        }
+        public void showPopup(String name, String passwordType, String username, String password){
+            final View popupView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.password_popup_window, null);
+            final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+            closeButton =popupView.findViewById(R.id.closeButton);
+            textInputLayoutUsername=popupView.findViewById(R.id.popup_card_username);
+            textInputLayoutPassword=popupView.findViewById(R.id.popup_card_password);
+            headerName=popupView.findViewById(R.id.popup_card_name);
+
+            Objects.requireNonNull(textInputLayoutUsername.getEditText()).setText(username);
+            Objects.requireNonNull(textInputLayoutPassword.getEditText()).setText(password);
+            headerName.setText(name);
+
+            closeButton.setOnClickListener(v -> popupWindow.dismiss());
+
+
+            popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
         }
     }

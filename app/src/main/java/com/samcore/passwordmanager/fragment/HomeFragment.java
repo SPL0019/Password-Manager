@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment  {
         appSession=new AppSession(requireContext());
         findViewById(view);
 
-        fetchData(appSession.getKeyUid());
+//        fetchData(appSession.getKeyUid());
         return view;
     }
 
@@ -74,12 +74,11 @@ public class HomeFragment extends Fragment  {
 
         // Set up RecyclerView
 
-
+        fetchData(appSession.getKeyUid());
         homeFragmentAdapter=new HomeFragmentAdapter(passwordList,getContext());
-        passwordRecycler.setHasFixedSize(true);
         passwordRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         passwordRecycler.setAdapter(homeFragmentAdapter);
-        fetchData(appSession.getKeyUid());
+
 
     }
     public void fetchData(String path) {
