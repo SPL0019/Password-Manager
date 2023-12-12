@@ -1,7 +1,6 @@
 package com.samcore.passwordmanager.fragment;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapter.ViewHolder>{
-    private List<PasswordModel> passwordList;
-    private Context context;
+    private final List<PasswordModel> passwordList;
+    private final Context context;
 
     // Constructor, onCreateViewHolder, onBindViewHolder, getItemCount methods
 
@@ -53,8 +52,6 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 .placeholder(R.drawable.logo)
                 .into(holder.imageView);
 
-        Log.e("TAG", "onBindViewHolder: passwordModel.getName()"+ passwordModel.getName());
-
         holder.itemView.setOnClickListener(v->{
             holder.showPopup(passwordModel.getName(),passwordModel.getPassword_type(),passwordModel.getUsername(),passwordModel.getPassword());
         });
@@ -63,7 +60,6 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
 
     @Override
     public int getItemCount() {
-        Log.e("TAG", "getItemCount: "+passwordList.size());
         return (passwordList != null) ? passwordList.size() : 0;
     }
 

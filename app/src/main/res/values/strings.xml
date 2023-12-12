@@ -28,4 +28,14 @@
     <string name="logo">logo</string>
     <string name="hi">Hi,</string>
     <string name="close">Close</string>
+    <string name="upload_aadharcard">Upload AadharCard</string>
+    <string name="upload_pan_card">Upload PAN Card</string>
+    <string name="upload">please upload image here</string>
+    <string name="all_documents">All Documents</string>
+    <string name="title_activity_web_view">WebViewActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
 </resources>

@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +82,7 @@ public class HomeFragment extends Fragment  {
     }
     public void fetchData(String path) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Password");
+        passwordList.clear();
         databaseReference.child(path).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -91,10 +91,8 @@ public class HomeFragment extends Fragment  {
 //                    String childName = childSnapshot.getKey();
 
                     for (DataSnapshot typeSnapshot: childSnapshot.getChildren()){
-                        String childName = typeSnapshot.getKey();
                         PasswordModel passwordModel = typeSnapshot.getValue(PasswordModel.class);
                         passwordList.add(passwordModel);
-                        Log.e("TAG1", "Password list: "+passwordModel.getPassword_type());
 
                     }
 
