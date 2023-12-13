@@ -7,6 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +41,7 @@ import com.samcore.passwordmanager.components.AppSession;
 import com.samcore.passwordmanager.model.UserModel;
 
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     TextInputLayout name,email,password;
@@ -56,6 +60,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     UserModel userModel=new UserModel();
     String name_s="",email_s="",password_S="";
     AppSession appSession;
+    Executor executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +85,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // below line is used to get reference for our database.
         databaseReference = firebaseDatabase.getReference("UserInfo");
 
-
+        // creating a variable for our Executor
+        executor = ContextCompat.getMainExecutor(this);
     }
 
     private void findViewById() {
@@ -131,8 +137,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         appSession.setKeyIsLoggedIn(true);
                         appSession.setKeyUsername(Objects.requireNonNull(user).getDisplayName());
                         appSession.setKeyUid(user.getUid());
-                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-                        startActivity(intent);
+                        CheckBiometric();
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -281,7 +286,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         updateUI(user);
                         appSession.setKeyIsLoggedIn(true);
-                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                       CheckBiometric();
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -363,5 +368,70 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(LoginActivity.this, "Fail to add data " + error, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void CheckBiometric(){
+        // creating a variable for our BiometricManager
+        // and lets check if our user can use biometric sensor or not
+        BiometricManager biometricManager = androidx.biometric.BiometricManager.from(this);
+        switch (biometricManager.canAuthenticate()) {
+
+            // this means we can use biometric sensor
+            case BiometricManager.BIOMETRIC_SUCCESS:
+                BiometricLogin();
+                break;
+
+            // this means that the device doesn't have fingerprint sensor
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                Toast.makeText(this, "This device doesn't have a fingerprint sensor", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
+                break;
+
+            // this means that biometric sensor is not available
+            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                Toast.makeText(this, "The biometric sensor is currently unavailable", Toast.LENGTH_SHORT).show();
+                break;
+
+            // this means that the device doesn't contain your fingerprint
+            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                Toast.makeText(this, "Your device doesn't have fingerprint saved,please check your security settings", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void BiometricLogin() {
+        // this will give us result of AUTHENTICATION
+        final BiometricPrompt biometricPrompt = new BiometricPrompt(LoginActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+            }
+
+            // THIS METHOD IS CALLED WHEN AUTHENTICATION IS SUCCESS
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT).show();
+               Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+               startActivity(intent);
+            }
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+        });
+        // creating a variable for our promptInfo
+        // BIOMETRIC DIALOG
+        final BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder().setTitle("GFG")
+                .setDescription("Use your fingerprint to login ").setNegativeButtonText("Cancel").build();
+        biometricPrompt.authenticate(promptInfo);
+      /*  loginbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });*/
     }
 }

@@ -1,5 +1,7 @@
 package com.samcore.passwordmanager.fragment;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -30,6 +33,7 @@ import com.samcore.passwordmanager.model.PasswordTypeModel;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 public class PasswordGeneratorFragment extends Fragment implements View.OnClickListener{
     FirebaseAuth firebaseAuth;
@@ -43,7 +47,8 @@ public class PasswordGeneratorFragment extends Fragment implements View.OnClickL
     Spinner passwordTypeSpinner;
     ArrayList<String> passwordTypeList=new ArrayList<>();
     TextInputLayout name_txt,username_txt,password_txt;
-    AppCompatButton saveButton;
+    AppCompatButton saveButton,generatePasswordButton;
+    TextView generatePassword;
     private static final String TAG = "Password fragment";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,13 +76,17 @@ public class PasswordGeneratorFragment extends Fragment implements View.OnClickL
         username_txt=view.findViewById(R.id.add_password_username);
         password_txt=view.findViewById(R.id.add_password_password);
 
+        generatePassword=view.findViewById(R.id.password_generator);
+
         saveButton=view.findViewById(R.id.save_password_button);
+        generatePasswordButton=view.findViewById(R.id.password_generator_button);
 
 
 
         addPasswordTypeButton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
-//        passwordTypeSpinner.setOnClickListener(this);
+        generatePasswordButton.setOnClickListener(this);
+        generatePassword.setOnClickListener(this);
 
         addSpinnerData();
     }
@@ -102,6 +111,13 @@ public class PasswordGeneratorFragment extends Fragment implements View.OnClickL
                 passwordModel.setPassword_type(Objects.requireNonNull(passwordTypeSpinner.getSelectedItem().toString()));
                 addPasswordToFirebase();
             }
+        } else if (view==generatePasswordButton) {
+            String generatedPassword=generateRandomPassword(18,true,true,true,true);
+            generatePassword.setText(generatedPassword);
+        } else if (view==generatePassword) {
+            ClipboardManager cm =(ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            cm.setText(generatePassword.getText());
+            Toast.makeText(getContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show();
         }
     }
     private boolean validation(){
@@ -199,5 +215,45 @@ public class PasswordGeneratorFragment extends Fragment implements View.OnClickL
 
                     }
                 });
+    }
+    private static String generateRandomPassword(int max_length, boolean upperCase, boolean lowerCase, boolean numbers, boolean specialCharacters)
+    {
+        String upperCaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCaseChars = "abcdefghijklmnopqrstuvwxyz";
+        String numberChars = "0123456789";
+        String specialChars = "!@#$%^&*()_-+=<>?/{}~|";
+        String allowedChars = "";
+
+        Random rn = new Random();
+        StringBuilder sb = new StringBuilder(max_length);
+
+        //this will fulfill the requirements of atleast one character of a type.
+        if(upperCase) {
+            allowedChars += upperCaseChars;
+            sb.append(upperCaseChars.charAt(rn.nextInt(upperCaseChars.length()-1)));
+        }
+
+        if(lowerCase) {
+            allowedChars += lowerCaseChars;
+            sb.append(lowerCaseChars.charAt(rn.nextInt(lowerCaseChars.length()-1)));
+        }
+
+        if(numbers) {
+            allowedChars += numberChars;
+            sb.append(numberChars.charAt(rn.nextInt(numberChars.length()-1)));
+        }
+
+        if(specialCharacters) {
+            allowedChars += specialChars;
+            sb.append(specialChars.charAt(rn.nextInt(specialChars.length()-1)));
+        }
+
+
+        //fill the allowed length from different chars now.
+        for(int i=sb.length();i < max_length;++i){
+            sb.append(allowedChars.charAt(rn.nextInt(allowedChars.length())));
+        }
+
+        return  sb.toString();
     }
 }
