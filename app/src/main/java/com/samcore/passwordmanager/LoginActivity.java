@@ -307,6 +307,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         addDataToFirebase(user);
                         startActivity(new Intent(LoginActivity.this,LoginActivity.class));
+                        finish();
                     } else {
                         // If sign in fails, display a message to the user.
                         // If sign in fails, display a message to the user.
@@ -386,6 +387,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(this, "This device doesn't have a fingerprint sensor", Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
 
             // this means that biometric sensor is not available
@@ -415,6 +417,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT).show();
                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                startActivity(intent);
+               finish();
             }
             @Override
             public void onAuthenticationFailed() {

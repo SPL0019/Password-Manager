@@ -57,6 +57,7 @@ public class SplashActivity extends AppCompatActivity {
                 Toast.makeText(this, "This device doesn't have a fingerprint sensor", Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
 
             // this means that biometric sensor is not available
@@ -86,6 +87,7 @@ public class SplashActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
+                finish();
             }
             @Override
             public void onAuthenticationFailed() {
