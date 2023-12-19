@@ -39,4 +39,10 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="generate_password">Generate password</string>
+    <string name="add_notes">Add Notes</string>
+    <string name="more">More</string>
+    <string name="notes">Notes</string>
+    <string name="notes_type_here">notes type here...</string>
+    <string name="title">Title</string>
+    <string name="password_lenght">Password lenght</string>
 </resources>

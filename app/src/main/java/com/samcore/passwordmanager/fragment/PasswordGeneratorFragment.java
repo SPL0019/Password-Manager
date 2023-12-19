@@ -46,7 +46,7 @@ public class PasswordGeneratorFragment extends Fragment implements View.OnClickL
     ImageView addPasswordTypeButton;
     Spinner passwordTypeSpinner;
     ArrayList<String> passwordTypeList=new ArrayList<>();
-    TextInputLayout name_txt,username_txt,password_txt;
+    TextInputLayout name_txt,username_txt,password_txt,password_length;
     AppCompatButton saveButton,generatePasswordButton;
     TextView generatePassword;
     private static final String TAG = "Password fragment";
@@ -76,6 +76,7 @@ public class PasswordGeneratorFragment extends Fragment implements View.OnClickL
         username_txt=view.findViewById(R.id.add_password_username);
         password_txt=view.findViewById(R.id.add_password_password);
 
+        password_length=view.findViewById(R.id.add_password_length);
         generatePassword=view.findViewById(R.id.password_generator);
 
         saveButton=view.findViewById(R.id.save_password_button);
@@ -112,8 +113,15 @@ public class PasswordGeneratorFragment extends Fragment implements View.OnClickL
                 addPasswordToFirebase();
             }
         } else if (view==generatePasswordButton) {
-            String generatedPassword=generateRandomPassword(18,true,true,true,true);
-            generatePassword.setText(generatedPassword);
+            int length= Integer.parseInt(Objects.requireNonNull(password_length.getEditText()).getText().toString());
+            if (password_length.getEditText().getText().toString().isEmpty())
+                Toast.makeText(getActivity(), "please enter password length", Toast.LENGTH_SHORT).show();
+            else {
+                String generatedPassword = generateRandomPassword(length, true, true, true, true);
+                generatePassword.setText(generatedPassword);
+            }
+            password_length.getEditText().setText("");
+            password_length.getEditText().clearFocus();
         } else if (view==generatePassword) {
             ClipboardManager cm =(ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
             cm.setText(generatePassword.getText());

@@ -13,7 +13,7 @@
         android:id="@+id/document_upload"
         android:title="@string/documents"
         android:icon="@drawable/icon_upload_document"/>
-    <item android:id="@+id/logout"
-        android:title="@string/logout"
-        android:icon="@drawable/icon_logout"/>
+    <item android:id="@+id/more"
+        android:title="@string/more"
+        android:icon="@drawable/icon_option"/>
 </menu>

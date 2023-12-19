@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.samcore.passwordmanager.components.AppSession;
 import com.samcore.passwordmanager.fragment.DocumentUploadFragment;
 import com.samcore.passwordmanager.fragment.HomeFragment;
+import com.samcore.passwordmanager.fragment.NotesFragment;
 import com.samcore.passwordmanager.fragment.PasswordGeneratorFragment;
 import com.samcore.passwordmanager.model.UploadDocumentModel;
 
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
     HomeFragment homeFragment=new HomeFragment();
     PasswordGeneratorFragment passwordGeneratorFragment=new PasswordGeneratorFragment();
     DocumentUploadFragment documentUploadFragment=new DocumentUploadFragment();
+    NotesFragment notesFragment=new NotesFragment();
     AppSession appSession;
     FirebaseAuth firebaseAuth;
     FirebaseStorage storage;
@@ -75,8 +79,9 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
             case R.id.document_upload:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,documentUploadFragment).commit();
                 return true;
-            case R.id.logout:
-                logout();
+            case R.id.more:
+                //logout();
+                showOptionsMenu(findViewById(R.id.more));
                 return true;
         }
         return false;
@@ -100,6 +105,34 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
         }
 
         Toast.makeText(getApplicationContext(), "On Activity Result Called", Toast.LENGTH_SHORT).show();
+    }
+    private void showOptionsMenu(View view) {
+        // Creating the instance of PopupMenu
+        PopupMenu popup = new PopupMenu(MainActivity.this, view);
+        // Inflating the Popup using xml file
+        popup.getMenuInflater().inflate(R.menu.options_menu, popup.getMenu());
+
+        // Registering the popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                // Handle menu item clicks
+                switch (item.getItemId()) {
+                    case R.id.notes_menu:
+                        // Handle option 1
+                        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,notesFragment).commit();
+                        return true;
+                    case R.id.logout:
+                        // Handle option 2
+                        logout();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        // Showing the popup menu
+        popup.show();
     }
     private void uploadFileToFirebaseStorage(Uri fileUri, String documentType) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
